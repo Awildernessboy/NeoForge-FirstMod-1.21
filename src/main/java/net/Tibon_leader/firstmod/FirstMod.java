@@ -1,5 +1,6 @@
 package net.Tibon_leader.firstmod;
 
+import net.Tibon_leader.firstmod.item.ModItems;
 import org.slf4j.Logger;
 
 import com.mojang.logging.LogUtils;
@@ -38,9 +39,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 @Mod(net.Tibon_leader.firstmod.FirstMod.MODID)
 public class FirstMod
 {
-    // Define mod id in a common place for everything to reference
     public static final String MODID = "firstmod";
-    // Directly reference a slf4j logger
     private static final Logger LOGGER = LogUtils.getLogger();
 
     // The constructor for the mod class is the first code that is run when your mod is loaded.
@@ -56,6 +55,8 @@ public class FirstMod
         // Do not add this line if there are no @SubscribeEvent-annotated functions in this class, like onServerStarting() below.
         NeoForge.EVENT_BUS.register(this);
 
+        ModItems.register(modEventBus);
+
         // Register the item to a creative tab
         modEventBus.addListener(this::addCreative);
         // Register our mod's ModConfigSpec so that FML can create and load the config file for us
@@ -70,7 +71,11 @@ public class FirstMod
     // Add the example block item to the building blocks tab
     private void addCreative(BuildCreativeModeTabContentsEvent event)
     {
-
+        if(event.getTabKey() == CreativeModeTabs.INGREDIENTS)
+        {
+            event.accept(ModItems.Green_Diamond);
+            event.accept(ModItems.Green_Amethyst_Shard);
+        }
     }
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call
